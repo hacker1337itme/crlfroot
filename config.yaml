@@ -1,0 +1,97 @@
+targets:
+  urls:
+    - "https://example.com"
+  domains: []
+  wordlist: "wordlists/urls.txt"
+  recurse_depth: 3
+  max_pages: 1000
+
+scanner:
+  threads: 50
+  timeout: 30
+  rate_limit: 10
+  follow_redirects: true
+  retries: 3
+  verify_ssl: false
+  user_agents:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15"
+    - "curl/7.68.0"
+    - "PostmanRuntime/7.28.4"
+  proxy: ""
+
+crlf:
+  payloads:
+    - "%0d%0aSet-Cookie:crlf=injected"
+    - "%0d%0aLocation:javascript:alert(1)"
+    - "%0d%0aX-XSS-Protection:0"
+    - "%0d%0aAccess-Control-Allow-Origin:*"
+    - "%0d%0aX-Forwarded-Host:attacker.com"
+  test_headers:
+    - "User-Agent"
+    - "Referer"
+    - "X-Forwarded-For"
+    - "X-Forwarded-Host"
+  test_params:
+    - "url"
+    - "redirect"
+    - "next"
+    - "return"
+  test_paths:
+    - "/redirect"
+    - "/callback"
+    - "/auth/callback"
+  test_methods: ["GET", "POST", "PUT"]
+
+spider:
+  enabled: true
+  extract_urls: true
+  extract_forms: true
+  extract_js: true
+  extract_comments: true
+  robots_txt: true
+  sitemap_xml: true
+  common_files:
+    - "robots.txt"
+    - "sitemap.xml"
+    - "crossdomain.xml"
+  common_dirs:
+    - "admin"
+    - "api"
+    - "auth"
+  file_extensions:
+    - ".php"
+    - ".html"
+    - ".js"
+    - ".json"
+
+auth:
+  enabled: false
+  methods: ["basic", "bearer"]
+  credentials:
+    username: "admin"
+    password: "admin"
+  headers:
+    Authorization: "Bearer"
+  tokens: []
+  session_management: true
+
+headers:
+  custom:
+    X-Requested-With: "XMLHttpRequest"
+    Accept: "application/json, text/plain, */*"
+  fuzz_headers:
+    - "X-Forwarded-For"
+    - "X-Forwarded-Host"
+    - "X-Original-URL"
+  security_headers:
+    - "Content-Security-Policy"
+    - "X-Frame-Options"
+  add_random_headers: true
+
+output:
+  directory: "results"
+  formats: ["json", "html", "md", "csv"]
+  verbose: false
+  save_responses: true
+  color: true
