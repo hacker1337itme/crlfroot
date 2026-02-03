@@ -4,14 +4,10 @@
 targets:
   # Direct URLs to scan
   urls:
-    - https://example.com
-    - http://test.example.com
+    - "http://hackme.com/"  # Test site that exists
   
-  # Domains to generate URLs from
-  domains:
-    - target-domain.com
-    - another-target.com
-  
+  # Replace these with actual domains you have permission to test
+  domains: []
   # Path wordlist for URL generation
   wordlist: "wordlists/urls.txt"
   
@@ -26,16 +22,16 @@ scanner:
   threads: 50
   
   # Request timeout in seconds
-  timeout: 30
+  timeout: 1
   
   # Rate limit (requests per second)
-  rate_limit: 10
+  rate_limit: 1
   
   # Follow HTTP redirects
   follow_redirects: true
   
   # Number of retries for failed requests
-  retries: 3
+  retries: 1
   
   # Verify SSL certificates
   verify_ssl: false
