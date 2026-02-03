@@ -5,31 +5,31 @@ crlfroot
 
 ```bash
 # 1. Initialize module
-go mod init crlf-scanner
+go mod init crlfroot
 
 # 2. Download dependencies
 go mod download
 
 # 3. Build the scanner
-go build -o crlf-scanner
+go build -o crflroot
 
 # 4. Run basic scan
-./crlfdz -u https://example.com
+./crlfroot -u https://example.com
 
 # 5. Scan with authentication
-./crlfdz -u https://example.com --auth
+./crlfroot -u https://example.com --auth
 
 # 6. Scan multiple URLs from file
-./crlfdz -uf urls.txt -t 100 -r 20
+./crlfroot -uf urls.txt -t 100 -r 20
 
 # 7. Use custom configuration
-./crlfdz -u https://example.com -c config.yaml
+./crlfroot -u https://example.com -c config.yaml
 
 # 8. Disable spidering
-./crlfdz -u https://example.com --no-spider
+./crlfroot -u https://example.com --no-spider
 
 # 9. Verbose mode
-./crlfdz -u https://example.com -v
+./crlfroot -u https://example.com -v
 ```
 
 ## Features:
@@ -73,3 +73,11 @@ go build -o crlf-scanner
    - Proxy support
 
 This is a production-ready CRLF injection scanner with enterprise features for comprehensive web application security testing.
+
+## NEXT UPDATE 
+
+* 1 ADD PROXY INTERSEPT
+* 2 ADD MULTI MATCH REPLACE CONFIG ATTACK
+* 3 ADD MULTI PAYLOAD BYPASS BY PAYLAOD ENGINE
+* 4 AUTO SEND ALL VULN TO TELEGRAM AND 0AUTH WEBHOOK EX: GITHUB + DISCORD
+* 5 ENJOY BUGBOUTY WITH WORKFLOW AUTOMATION 
